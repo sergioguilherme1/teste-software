@@ -1,0 +1,99 @@
+Exercicio 2 - Analise de leituras de temperatura
+
+Metodo analisado:
+
+public int contarAlertas(double[] temperaturas) {
+    int alertas = 0;
+    int i = 0;
+
+    while (i < temperaturas.length) {
+        if (temperaturas[i] < 0) {
+            alertas += 2;
+        } else if (temperaturas[i] > 35) {
+            alertas++;
+        }
+
+        i++;
+    }
+
+    return alertas;
+}
+
+
+Blocos basicos
+
+1. Inicio, alertas = 0, i = 0
+2. while (i < temperaturas.length)
+3. if (temperaturas[i] < 0)
+4. alertas += 2
+5. else if (temperaturas[i] > 35)
+6. alertas++
+7. i++ (volta pro while)
+8. return alertas
+9. Fim
+
+
+Decisoes
+
+- condicao do while: i < temperaturas.length
+- primeiro if: temperaturas[i] < 0
+- else if: temperaturas[i] > 35
+
+3 decisoes no total.
+
+
+Grafo
+
+Ver imagem exercicio2-cfg.png.
+
+Pontos importantes do desenho:
+- entra no laco pela aresta 2-3
+- as tres classificacoes possiveis: 3-4 (negativa), 3-5-6 (>35), 3-5-7 (entre 0 e 35)
+- todo mundo converge no bloco 7 (i++)
+- aresta de retorno: 7 volta pro 2
+- sai do laco pela aresta 2-8
+
+
+Contagem de nos e arestas
+
+N = 9
+E = 11
+
+Arestas: 1-2, 2-3, 2-8, 3-4, 3-5, 4-7, 5-6, 5-7, 6-7, 7-2, 8-9
+
+
+Complexidade ciclomatica
+
+V(G) = E - N + 2 = 11 - 9 + 2 = 4
+
+Confirmando: V(G) = decisoes + 1 = 3 + 1 = 4
+
+Deu igual nos dois calculos.
+
+
+Caminhos independentes (4 no total)
+
+1. vetor vazio [] -> sai do laco direto, alertas = 0
+2. vetor [-5] -> entra uma vez, temperatura negativa, alertas = 2
+3. vetor [40] -> entra uma vez, temperatura acima de 35, alertas = 1
+4. vetor [20] -> entra uma vez, temperatura entre 0 e 35, alertas = 0
+
+Testes extras de fronteira: [0] -> alertas = 0 (limite do primeiro if), [35] -> alertas = 0 (limite do else if, ja que e ">" e nao ">=")
+
+
+Discussao
+
+Um vetor com varias temperaturas percorre um unico caminho ou repete partes do grafo?
+Repete. Cada posicao do vetor faz o laco passar de novo pelas mesmas arestas (2-3, depois 4 ou 5-6 ou 5-7, depois 7, e volta pro 2). Nao e um caminho novo pra cada elemento, e o mesmo ciclo se repetindo.
+
+Qual entrada permite sair do metodo sem acessar nenhuma posicao do vetor?
+Um vetor vazio. Como i comeca em 0 e o length tambem e 0, a condicao do while ja e falsa de cara e o corpo do laco nunca roda.
+
+Os testes com 0 e 35 ajudam a avaliar quais fronteiras?
+Sao os limites exatos das comparacoes. 0 testa o "< 0" (0 nao e menor que 0, cai no ramo normal) e 35 testa o "> 35" (35 nao e maior que 35, tambem cai no ramo normal). Servem pra confirmar que as comparacoes sao estritas.
+
+Por que o else if precisa ser uma decisao separada?
+Porque so e avaliado se o primeiro if for falso, e tem sua propria saida sim/nao. Se nao contasse como decisao separada, a complexidade calculada ficaria menor do que a real.
+
+Por que a aresta de retorno do laco precisa aparecer no grafo?
+Porque sem ela nao daria pra representar que o while e reavaliado depois de cada iteracao. E essa aresta que fecha o ciclo e que entra na conta do V(G).

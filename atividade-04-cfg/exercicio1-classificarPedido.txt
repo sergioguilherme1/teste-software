@@ -1,0 +1,95 @@
+Exercicio 1 - Classificacao de pedido
+
+Metodo analisado:
+
+public String classificarPedido(
+        double valor,
+        boolean clienteVip,
+        boolean pagamentoAprovado) {
+
+    double desconto = 0;
+
+    if (valor >= 500) {
+        desconto = 10;
+    }
+
+    if (clienteVip) {
+        desconto += 5;
+    }
+
+    if (!pagamentoAprovado) {
+        return "PAGAMENTO RECUSADO";
+    }
+
+    double valorFinal = valor - (valor * desconto / 100);
+    return "PEDIDO APROVADO: " + valorFinal;
+}
+
+
+Blocos basicos
+
+1. Inicio, desconto = 0
+2. if (valor >= 500)
+3. desconto = 10
+4. if (clienteVip)
+5. desconto += 5
+6. if (!pagamentoAprovado)
+7. return "PAGAMENTO RECUSADO"
+8. valorFinal = ...; return "PEDIDO APROVADO..."
+9. Fim
+
+
+Decisoes
+
+- valor >= 500
+- clienteVip
+- !pagamentoAprovado
+
+3 decisoes no total.
+
+
+Grafo
+
+Ver imagem exercicio1-cfg.png.
+
+O return de dentro do terceiro if faz o fluxo pular direto pro Fim, sem passar pelo bloco 8 (calculo do valorFinal).
+
+
+Contagem de nos e arestas
+
+N = 9
+E = 11
+
+Arestas: 1-2, 2-3, 2-4, 3-4, 4-5, 4-6, 5-6, 6-7, 6-8, 7-9, 8-9
+
+
+Complexidade ciclomatica
+
+V(G) = E - N + 2 = 11 - 9 + 2 = 4
+
+Confirmando: V(G) = decisoes + 1 = 3 + 1 = 4
+
+Deu igual nos dois calculos.
+
+
+Caminhos independentes (4 no total)
+
+1. valor=100, clienteVip=false, pagamentoAprovado=true -> "PEDIDO APROVADO: 100.0"
+2. valor=600, clienteVip=false, pagamentoAprovado=true -> "PEDIDO APROVADO: 540.0" (ganhou 10% de desconto)
+3. valor=100, clienteVip=true, pagamentoAprovado=true -> "PEDIDO APROVADO: 95.0" (ganhou 5% de desconto)
+4. valor=100, clienteVip=false, pagamentoAprovado=false -> "PAGAMENTO RECUSADO"
+
+
+Discussao
+
+Quantas combinacoes entre as tres condicoes sao possiveis?
+Sao 3 condicoes, entao 2 x 2 x 2 = 8 combinacoes possiveis.
+
+O numero de combinacoes e igual a complexidade ciclomatica?
+Nao. Deu 8 combinacoes mas V(G) e 4. Sao coisas diferentes: V(G) conta os caminhos minimos pra cobrir todo o grafo, nao todas as combinacoes de entrada possiveis. Varias das 8 combinacoes acabam passando pelas mesmas arestas, entao nao precisa testar todas as 8 pra cobrir o codigo.
+
+Como o return dentro do terceiro if muda o grafo?
+Ele cria uma saida antes da hora, que vai direto pro Fim sem passar pelo calculo do valorFinal. Fica tipo um desvio: ou o fluxo passa pelo bloco 7 (recusado) ou pelo bloco 8 (aprovado), e so depois os dois se encontram no Fim.
+
+E possivel calcular o valorFinal quando o pagamento nao foi aprovado?
+Nao, porque o return acontece antes. Se pagamentoAprovado for false, o metodo ja termina ali, nunca chega no bloco que calcula o valorFinal.
